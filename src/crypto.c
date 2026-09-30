@@ -2,7 +2,7 @@
 // Created by vikram on 9/30/26.
 //
 
-#include "crypto.h"
+#include "../include/crypto.h"
 
 #include <inttypes.h>
 #include <sodium.h>

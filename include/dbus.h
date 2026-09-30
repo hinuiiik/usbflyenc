@@ -5,4 +5,6 @@
 #ifndef USBFLYENC_SCANNER_H
 #define USBFLYENC_SCANNER_H
 
+int monitor_dbus(void);
+
 #endif //USBFLYENC_SCANNER_H

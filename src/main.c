@@ -2,7 +2,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "crypto.h"
+#include "../include/crypto.h"
+#include "../include/dbus.h"
 
 static int printHelp(void) {
     printf("No arguments provided.\n"
@@ -47,6 +48,8 @@ int main(int argc, char *argv[]) {
             printf("Input file does not exist.\n");
             return 1;
         }
+    } else if (strcmp(argv[1], "monitor") == 0) {
+        monitor_dbus();
     } else {
         printHelp();
         return 1;

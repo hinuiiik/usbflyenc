@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <iostream>
 #include <fstream>
-#include "crypto.h"
+#include "../include/crypto.h"
 
 #define PLAINTEXT_CONTENTS "This is a testing file for encryption and decryption. \n It contains some sample text to verify the functionality of the crypto library."
 #define KEYFILE_NAME "test_secret.key"

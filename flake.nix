@@ -19,14 +19,14 @@
             gnumake
             gdb
             clang-tools
-            libsodium
-
             meson
             ninja
             pkg-config
             gtk4
             glib
-            gtk4-layer-shell
+
+            libsodium
+            dbus
           ];
         };
       });

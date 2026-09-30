@@ -3,13 +3,15 @@ project('usbflyenc', 'c', 'cpp',
         default_options : ['warning_level=3', 'c_std=c17', 'cpp_std=c++17']) # Added C++ standard for GoogleTest
 
 sodium = dependency('libsodium', required : true)
+glib = dependency('glib-2.0', required : true)
+gio =  dependency('gio-2.0', required : true)
 
-inc = include_directories('src')
-src_files = files('src/main.c', 'src/crypto.c')
+inc = include_directories('src', 'include')
+src_files = files('src/main.c', 'src/crypto.c', 'src/dbus.c')
 
 usbflyenc = executable('usbflyenc', src_files,
                        include_directories : inc,
-                       dependencies : [sodium],
+                       dependencies : [sodium, glib, gio],
                        install : true)
 
 
