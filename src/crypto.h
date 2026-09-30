@@ -5,8 +5,16 @@
 #ifndef USBFLYENC_CRYPTO_H
 #define USBFLYENC_CRYPTO_H
 
-int encrypt_file(char input[], char output[], char secretpath[]);
-int create_secret_key(char output[]);
-int decrypt_file(char input[], char output[], char secretpath[]);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int encrypt_file(const char input[], const char output[], const char secretpath[]);
+int create_secret_key(const char output[]);
+int decrypt_file(const char input[], const char output[], const char secretpath[]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //USBFLYENC_CRYPTO_H

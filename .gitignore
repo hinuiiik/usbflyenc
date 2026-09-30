@@ -1,3 +1,7 @@
 test.png
 .direnv
 buildDir
+/subprojects/*
+/subprojects/packagecache/
+!/subprojects/*.wrap
+!/subprojects/packagefiles/

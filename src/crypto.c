@@ -8,7 +8,7 @@
 #include <sodium.h>
 #include <string.h>
 
-int encrypt_file(char input[], char output[], char secretpath[]) {
+int encrypt_file(const char input[], const char output[], const char secretpath[]) {
     if (sodium_init() < 0) {
         /* panic! the library couldn't be initialized; it is not safe to use */
     }
@@ -48,7 +48,7 @@ int encrypt_file(char input[], char output[], char secretpath[]) {
     return 0;
 }
 
-int decrypt_file(char input[], char output[], char secretpath[]) {
+int decrypt_file(const char input[], const char output[], const char secretpath[]) {
     if (sodium_init() < 0) {
         /* panic! the library couldn't be initialized; it is not safe to use */
     }
@@ -86,7 +86,7 @@ int decrypt_file(char input[], char output[], char secretpath[]) {
     memset(ciphertext, 0, ciphertext_length);
     return 0;}
 
-int create_secret_key(char output[]) {
+int create_secret_key(const char output[]) {
     if (sodium_init() < 0) {
         /* panic! the library couldn't be initialized; it is not safe to use */
     }
