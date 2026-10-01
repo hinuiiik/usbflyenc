@@ -2,7 +2,11 @@ Small Linux crypto project with the niche goal of having encrypted .txt files on
 
 When the monitor param is passed, dbus will be monitored for signals from udisks of drives being mounted. These drives are then checked for a manifest.list file on the root of the partition. This file contains relative paths to files, one per line. All files listed are moved to a location under /tmp/workspace_*timestamp*, with encrypted files being decrypted. In this temp dir, files can be added or modified, and can be committed back to the drive by replacing the 0 in COMMIT_FILES with a 1.
 
+All encryption is done with libsodium.
+XSalsa20-Poly1305 is used for Authenticated Encryption
+BLAKE2b hashing is used for verifying file integrity after copying.
 
 Planned: 
 - Implement reading from file streams
 - File & title padding
+- Support for more encryption protocols
