@@ -12,6 +12,7 @@ extern "C" {
 int encrypt_file(const char input[], const char output[], const char secretpath[]);
 int create_secret_key(const char output[]);
 int decrypt_file(const char input[], const char output[], const char secretpath[]);
+unsigned char* hash_file(const char *filename);
 
 #ifdef __cplusplus
 }

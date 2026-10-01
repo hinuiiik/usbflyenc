@@ -5,6 +5,6 @@
 #ifndef USBFLYENC_SCANNER_H
 #define USBFLYENC_SCANNER_H
 
-int monitor_dbus(void);
+int monitor_dbus(const char* secretpath);
 
 #endif //USBFLYENC_SCANNER_H

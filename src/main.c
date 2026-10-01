@@ -4,13 +4,15 @@
 
 #include "../include/crypto.h"
 #include "../include/dbus.h"
+#include "../include/drive.h"
 
 static int printHelp(void) {
     printf("No arguments provided.\n"
                "Available arguments:\n"
                "generate-secret \"destination\" (including the file itself) \n"
                "encrypt \"input\" \"output\" \"secret path\"\n"
-               "decrypt \"input\" \"output\" \"secret path\"\n");
+               "decrypt \"input\" \"output\" \"secret path\"\n"
+               "monitor \"secret path\"\n");
     return 1;
 }
 
@@ -49,7 +51,11 @@ int main(int argc, char *argv[]) {
             return 1;
         }
     } else if (strcmp(argv[1], "monitor") == 0) {
-        monitor_dbus();
+        if (argc != 3) {
+            printf("Invalid number of arguments for monitor.\n");
+            return 1;
+        }
+        monitor_dbus(argv[2]);
     } else {
         printHelp();
         return 1;

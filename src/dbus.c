@@ -1,5 +1,6 @@
 //
 // Created by vikram on 9/30/26.
+// Goal: Monitor for removable drives being mounted and get the mount point
 //
 
 #include "../include/dbus.h"
@@ -8,13 +9,15 @@
 #include <glib-2.0/glib.h>
 #include <glib-2.0/gio/gio.h>
 
+#include "include/drive.h"
+
 static void receive_signal(GDBusConnection *connection,
-                               const gchar *sender_name,
-                               const gchar *object_path,
-                               const gchar *interface_name,
-                               const gchar *signal_name,
-                               GVariant *parameters,
-                               gpointer user_data) {
+                           const gchar *sender_name,
+                           const gchar *object_path,
+                           const gchar *interface_name,
+                           const gchar *signal_name,
+                           GVariant *parameters,
+                           gpointer user_data) {
     // Sender: :_.__
     // Object Path: /org/freedesktop/UDisks2/block_devices/*
     // Interface: org.freedesktop.DBus.Properties
@@ -29,6 +32,7 @@ static void receive_signal(GDBusConnection *connection,
 
     // Each dbus event seems to create a null value variant around 3 times, maybe check if the sub can be more specific later
     if (value_variant != NULL) {
+        const char *secretpath = user_data;
         GVariantIter *iter;
         GVariant *child;
 
@@ -38,6 +42,7 @@ static void receive_signal(GDBusConnection *connection,
         const gchar *mount_path = g_variant_get_fixed_array(child, &length, sizeof(gchar));
         printf("Drive mounted at %s\n", mount_path);
         fflush(stdout);
+        run(mount_path, secretpath);
 
         g_variant_unref(child);
         g_variant_iter_free(iter);
@@ -45,7 +50,7 @@ static void receive_signal(GDBusConnection *connection,
     }
 }
 
-int monitor_dbus(void) {
+int monitor_dbus(const char *secretpath) {
     GMainLoop *loop;
     GDBusConnection *connection;
     GError *error = NULL;
@@ -71,8 +76,8 @@ int monitor_dbus(void) {
         "org.freedesktop.UDisks2.Filesystem",
         G_DBUS_SIGNAL_FLAGS_NONE,
         receive_signal,
-        NULL,
-        NULL
+        g_strdup(secretpath),
+        g_free
     );
 
     g_main_loop_run(loop);

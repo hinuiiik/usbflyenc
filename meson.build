@@ -7,7 +7,7 @@ glib = dependency('glib-2.0', required : true)
 gio =  dependency('gio-2.0', required : true)
 
 inc = include_directories('src', 'include')
-src_files = files('src/main.c', 'src/crypto.c', 'src/dbus.c')
+src_files = files('src/main.c', 'src/crypto.c', 'src/dbus.c', 'src/manifest.c', 'src/inotify.c', 'src/drive.c', 'src/workspace.c')
 
 usbflyenc = executable('usbflyenc', src_files,
                        include_directories : inc,

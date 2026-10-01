@@ -1,5 +1,6 @@
 //
 // Created by vikram on 9/30/26.
+// Goal: Provide encryption and decryption functions for files using libsodium
 //
 
 #include "../include/crypto.h"
@@ -7,6 +8,14 @@
 #include <inttypes.h>
 #include <sodium.h>
 #include <string.h>
+
+int get_file_length(FILE *fptr) {
+    size_t pos = ftell(fptr);
+    fseek(fptr, 0, SEEK_END);
+    size_t length = ftell(fptr);
+    fseek(fptr, pos, SEEK_SET);
+    return length;
+}
 
 int encrypt_file(const char input[], const char output[], const char secretpath[]) {
     if (sodium_init() < 0) {
@@ -21,10 +30,7 @@ int encrypt_file(const char input[], const char output[], const char secretpath[
 
     // copied from stackoverflow; gets length
     fptr = fopen(input, "rb");
-    size_t pos = ftell(fptr);
-    fseek(fptr, 0, SEEK_END);
-    size_t plaintext_length = ftell(fptr);
-    fseek(fptr, pos, SEEK_SET);
+    const size_t plaintext_length = get_file_length(fptr);
 
     unsigned char plaintext[plaintext_length];
     fread(plaintext, sizeof(unsigned char), plaintext_length, fptr);
@@ -84,7 +90,8 @@ int decrypt_file(const char input[], const char output[], const char secretpath[
     memset(key, 0, crypto_secretbox_KEYBYTES);
     memset(plaintext, 0, plaintext_length);
     memset(ciphertext, 0, ciphertext_length);
-    return 0;}
+    return 0;
+}
 
 int create_secret_key(const char output[]) {
     if (sodium_init() < 0) {
@@ -98,4 +105,20 @@ int create_secret_key(const char output[]) {
     memset(key, 0, crypto_secretbox_KEYBYTES);
     fclose(fptr);
     return 0;
+}
+
+unsigned char* hash_file(const char *filename) {
+    FILE *fptr = fopen(filename, "rb");
+    const size_t file_length = get_file_length(fptr);
+    unsigned char file_content[file_length];
+    fread(file_content, sizeof(unsigned char), file_length, fptr);
+
+    unsigned char* hash = malloc(crypto_generichash_BYTES);
+    crypto_generichash(hash, sizeof hash,
+                   file_content, file_length,
+                   NULL, 0);
+
+    memset(file_content, 0, file_length);
+    fclose(fptr);
+    return hash;
 }
