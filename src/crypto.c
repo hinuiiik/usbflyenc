@@ -3,13 +3,13 @@
 // Goal: Provide encryption and decryption functions for files using libsodium
 //
 
-#include "../include/crypto.h"
+#include "include/crypto.h"
 
 #include <inttypes.h>
 #include <sodium.h>
 #include <string.h>
 
-int get_file_length(FILE *fptr) {
+static int get_file_length(FILE *fptr) {
     size_t pos = ftell(fptr);
     fseek(fptr, 0, SEEK_END);
     size_t length = ftell(fptr);
@@ -114,7 +114,7 @@ unsigned char* hash_file(const char *filename) {
     fread(file_content, sizeof(unsigned char), file_length, fptr);
 
     unsigned char* hash = malloc(crypto_generichash_BYTES);
-    crypto_generichash(hash, sizeof hash,
+    crypto_generichash(hash, crypto_generichash_BYTES,
                    file_content, file_length,
                    NULL, 0);
 

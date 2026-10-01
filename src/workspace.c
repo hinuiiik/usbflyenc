@@ -2,7 +2,7 @@
 // Created by vikram on 9/30/26.
 // Goal: handle the temporary decrypted workspace
 
-#include "../include/workspace.h"
+#include "include/workspace.h"
 
 #include <time.h>
 #include <stdio.h>

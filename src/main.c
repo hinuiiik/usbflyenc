@@ -2,9 +2,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "../include/crypto.h"
-#include "../include/dbus.h"
-#include "../include/drive.h"
+#include "include/crypto.h"
+#include "include/dbus.h"
 
 static int printHelp(void) {
     printf("No arguments provided.\n"

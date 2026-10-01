@@ -3,7 +3,7 @@
 // Goal: Monitor for removable drives being mounted and get the mount point
 //
 
-#include "../include/dbus.h"
+#include "include/dbus.h"
 
 #include <stdio.h>
 #include <glib-2.0/glib.h>
@@ -30,24 +30,38 @@ static void receive_signal(GDBusConnection *connection,
     GVariant *value_variant;
     value_variant = g_variant_lookup_value(changed_properties, "MountPoints", NULL);
 
-    // Each dbus event seems to create a null value variant around 3 times, maybe check if the sub can be more specific later
-    if (value_variant != NULL) {
-        const char *secretpath = user_data;
-        GVariantIter *iter;
-        GVariant *child;
+    if (value_variant == NULL ||
+        !g_variant_is_of_type(value_variant, G_VARIANT_TYPE("aay"))) {
+        g_clear_pointer(&value_variant, g_variant_unref);
+        g_variant_unref(changed_properties);
+        return;
+    }
 
-        g_variant_get(value_variant, "aay", &iter);
-        gsize length;
-        child = g_variant_iter_next_value(iter);
-        const gchar *mount_path = g_variant_get_fixed_array(child, &length, sizeof(gchar));
+    GVariantIter *iter;
+    g_variant_get(value_variant, "aay", &iter);
+    GVariant *child = g_variant_iter_next_value(iter);
+
+    // ignore unmounts
+    if (child == NULL) {
+        g_variant_iter_free(iter);
+        g_variant_unref(value_variant);
+        g_variant_unref(changed_properties);
+        return;
+    }
+
+    gsize length;
+    const gchar *mount_path = g_variant_get_fixed_array(child, &length, sizeof(gchar));
+    if (mount_path != NULL && length > 0) {
+        const char *secretpath = user_data;
         printf("Drive mounted at %s\n", mount_path);
         fflush(stdout);
         run(mount_path, secretpath);
-
-        g_variant_unref(child);
-        g_variant_iter_free(iter);
-        g_variant_unref(value_variant);
     }
+
+    g_variant_unref(child);
+    g_variant_iter_free(iter);
+    g_variant_unref(value_variant);
+    g_variant_unref(changed_properties);
 }
 
 int monitor_dbus(const char *secretpath) {
